@@ -22,6 +22,8 @@ To install this library, use the NuGet package manager.
 
 * `mxProject.Data.DbRepository` package provides repositories for storing data in a database. see [Implementing database repositories](./document/DatabaseRepository.md) .
 
+* `mxProject.Data.FileRepository` package and `mxProject.Data.FileRepository.TxFileManager` package provide a repository for storing data in files using the file system. see [Implementing filesystem repositories](./document/FileRepository.md) .
+
 ## License
 
 This project is licensed under the MIT License.
