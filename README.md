@@ -24,6 +24,8 @@ To install this library, use the NuGet package manager.
 
 * `mxProject.Data.FileRepository` package and `mxProject.Data.FileRepository.TxFileManager` package provide a repository for storing data in files using the file system. see [Implementing filesystem repositories](./document/FileRepository.md) .
 
+* `mxProject.Data.Repository.Caching` package adds caching capabilities to repositories. see [Caching](./document/Caching.md) .
+
 ## License
 
 This project is licensed under the MIT License.
