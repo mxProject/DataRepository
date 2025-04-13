@@ -14,5 +14,16 @@ namespace Test.DbRepositories
         {
             return new SqlConnection("Data Source=(localdb)\\SampleDB; Initial Catalog=DataRepositorySampleDatabase; Integrated Security=True");
         }
+
+        internal static int DefaultCommandTimeout
+        {
+            get { return 15; }
+        }
+
+        internal static void ConfigureCommand(IDbCommand command)
+        {
+            command.CommandType = CommandType.Text;
+            command.CommandTimeout = DefaultCommandTimeout;
+        }
     }
 }

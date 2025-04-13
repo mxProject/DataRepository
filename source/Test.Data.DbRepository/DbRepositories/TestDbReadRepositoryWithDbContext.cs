@@ -52,7 +52,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Get_SpecifyingConnection()
         {
-            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true);
+            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -76,7 +76,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Get_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true);
+            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -102,7 +102,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetRange_SpecifyingConnection()
         {
-            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true);
+            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -128,7 +128,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetRange_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true);
+            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -156,7 +156,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetAll_SpecifyingConnection()
         {
-            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true);
+            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -178,7 +178,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetAll_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true);
+            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -202,7 +202,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetAllKeys_SpecifyingConnection()
         {
-            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true);
+            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -224,7 +224,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetAllKeys_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true);
+            using var repo = new SampleEntityReadRepositoryWithDbContext(null!, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 

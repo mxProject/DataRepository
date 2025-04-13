@@ -53,7 +53,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Insert_SpecifyingConnection()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -92,7 +92,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Insert_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -133,7 +133,7 @@ namespace Test.DbRepositories
         [Fact]
         public void InsertRange_SpecifyingConnection()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -186,7 +186,7 @@ namespace Test.DbRepositories
         [Fact]
         public void InsertRange_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -242,7 +242,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Update_SpecifyingConnection()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -282,7 +282,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Update_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -327,7 +327,7 @@ namespace Test.DbRepositories
         [Fact]
         public void UpdateRange_SpecifyingConnection()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -390,7 +390,7 @@ namespace Test.DbRepositories
         [Fact]
         public void UpdateRange_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -462,7 +462,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Delete_SpecifyingConnection()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -497,7 +497,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Delete_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -534,7 +534,7 @@ namespace Test.DbRepositories
         [Fact]
         public void DeleteRange_SpecifyingConnection()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 
@@ -587,7 +587,7 @@ namespace Test.DbRepositories
         [Fact]
         public void DeleteRange_SpecifyingTransaction()
         {
-            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithDbContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             using var connection = SampleDatabase.CreateConnection();
 

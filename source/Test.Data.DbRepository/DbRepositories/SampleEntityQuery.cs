@@ -39,10 +39,11 @@ namespace Test.DbRepositories
         /// <summary>
         /// Initializes a new instance of the <see cref="SampleEntityQuery"/> class.
         /// </summary>
-        /// <param name="connectionActivator">The method to activate a connection.</param>
+        /// <param name="connectionActivator">A method to activate a connection.</param>
         /// <param name="useTransactionScope">A value that indicates whether to use ambient transactions using TransactionScope.</param>
-        public SampleEntityQuery(Func<IDbConnection> connectionActivator, bool useTransactionScope)
-            : base(connectionActivator, useTransactionScope)
+        /// <param name="configureCommand">A method to configure a command.</param>
+        public SampleEntityQuery(Func<IDbConnection> connectionActivator, bool useTransactionScope, Action<IDbCommand> configureCommand)
+            : base(connectionActivator, useTransactionScope, configureCommand)
         {
         }
 
@@ -96,6 +97,8 @@ namespace Test.DbRepositories
         private IDbCommand CreateCommand(bool forGetCount, Func<IDbCommand> commandActivator, SampleEntityCondition condition, int skipCount = 0, int? maximumCount = null)
         {
             var command = commandActivator();
+
+            Assert.Equal(SampleDatabase.DefaultCommandTimeout, command.CommandTimeout);
 
             var sql = new StringBuilder();
 

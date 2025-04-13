@@ -31,7 +31,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Get()
         {
-            using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var entity = repo.Get(1);
 
@@ -49,7 +49,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetRange()
         {
-            using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             // id = -1 is not exist.
             var entities = repo.GetRange(new[] { 4, 2, -1 }).ToArray();
@@ -69,7 +69,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetAll()
         {
-            using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var entities = repo.GetAll().ToArray();
 
@@ -85,7 +85,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetAllKeys()
         {
-            using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var keys = repo.GetAllKeys().ToArray();
 

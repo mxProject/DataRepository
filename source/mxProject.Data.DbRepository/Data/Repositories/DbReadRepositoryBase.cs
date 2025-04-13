@@ -22,6 +22,17 @@ namespace mxProject.Data.Repositories
         {
         }
 
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="connectionActivator">The method to activate a connection.</param>
+        /// <param name="useTransactionScope">A value that indicates whether to use ambient transactions using TransactionScope.</param>
+        /// <param name="configureCommand">A method to configure a command.</param>
+        protected DbReadRepositoryBase(Func<IDbConnection> connectionActivator, bool useTransactionScope, Action<IDbCommand> configureCommand)
+            : base(connectionActivator, useTransactionScope, configureCommand)
+        {
+        }
+
         #region Get
 
         /// <inheritdoc/>
