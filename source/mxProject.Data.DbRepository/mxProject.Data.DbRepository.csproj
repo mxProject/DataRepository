@@ -6,7 +6,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>0.5.0</Version>
+    <Version>0.5.3</Version>
     <Authors>mxProject</Authors>
     <Description>Repository Pattern Library.</Description>
     <Copyright>Copyright (c) mxProject 2025</Copyright>
@@ -15,6 +15,7 @@
     <PackageTags>Repository, CQRS</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageReleaseNotes>* Added a constructor to the repository classes that accepts methods to configure the command. #1</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
