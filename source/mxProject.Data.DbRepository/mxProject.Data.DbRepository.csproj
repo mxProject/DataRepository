@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="mxProject.Data.AdoNet" Version="0.1.0" />
+    <PackageReference Include="mxProject.Data.AdoNet" Version="0.1.1" />
     <PackageReference Include="mxProject.Data.Repository.Abstractions" Version="0.5.0" />
   </ItemGroup>
 

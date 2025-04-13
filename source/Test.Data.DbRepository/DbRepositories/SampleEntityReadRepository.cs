@@ -17,10 +17,11 @@ namespace Test.DbRepositories
         /// <summary>
         /// Initializes a new instance of the <see cref="SampleEntityReadRepository"/> class.
         /// </summary>
-        /// <param name="connectionActivator">The method to activate a connection.</param>
+        /// <param name="connectionActivator">A method to activate a connection.</param>
         /// <param name="useTransactionScope">A value that indicates whether to use ambient transactions using TransactionScope.</param>
-        public SampleEntityReadRepository(Func<IDbConnection> connectionActivator, bool useTransactionScope)
-            : base(connectionActivator, useTransactionScope)
+        /// <param name="configureCommand">A method to configure a command.</param>
+        public SampleEntityReadRepository(Func<IDbConnection> connectionActivator, bool useTransactionScope, Action<IDbCommand> configureCommand)
+            : base(connectionActivator, useTransactionScope, configureCommand)
         {
         }
 

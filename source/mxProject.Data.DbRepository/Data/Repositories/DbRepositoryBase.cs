@@ -15,12 +15,24 @@ namespace mxProject.Data.Repositories
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        /// <param name="connectionActivator">The method to activate a connection.</param>
+        /// <param name="connectionActivator">A method to activate a connection.</param>
         /// <param name="useTransactionScope">A value that indicates whether to use ambient transactions using TransactionScope.</param>
         protected DbRepositoryBase(Func<IDbConnection> connectionActivator, bool useTransactionScope)
         {
             ConnectionActivator = connectionActivator;
             Executor = new DbCommandExecutor(connectionActivator, useTransactionScope);
+        }
+
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="connectionActivator">A method to activate a connection.</param>
+        /// <param name="useTransactionScope">A value that indicates whether to use ambient transactions using TransactionScope.</param>
+        /// <param name="configureCommand">A method to configure a command.</param>
+        protected DbRepositoryBase(Func<IDbConnection> connectionActivator, bool useTransactionScope, Action<IDbCommand> configureCommand)
+        {
+            ConnectionActivator = connectionActivator;
+            Executor = new DbCommandExecutor(connectionActivator, useTransactionScope, configureCommand);
         }
 
         /// <summary>

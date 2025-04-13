@@ -18,10 +18,11 @@ namespace Test.DbRepositories
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        /// <param name="connectionActivator">The method to activate a connection.</param>
+        /// <param name="connectionActivator">A method to activate a connection.</param>
         /// <param name="useTransactionScope">A value indicating whether to use TransactionScope.</param>
-        public SampleEntityRepositoryWithDbContext(Func<IDbConnection> connectionActivator, bool useTransactionScope)
-            : base(connectionActivator, useTransactionScope)
+        /// <param name="configureCommand">A method to configure a command.</param>
+        public SampleEntityRepositoryWithDbContext(Func<IDbConnection> connectionActivator, bool useTransactionScope, Action<IDbCommand> configureCommand)
+            : base(connectionActivator, useTransactionScope, configureCommand)
         {
         }
 

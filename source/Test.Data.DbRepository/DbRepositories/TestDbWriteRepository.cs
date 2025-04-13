@@ -40,7 +40,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Insert()
         {
-            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             // use ambient transaction
             using var scope = CreateTransactionScope();
@@ -77,7 +77,7 @@ namespace Test.DbRepositories
         [Fact]
         public void InsertRange()
         {
-            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             // use ambient transaction
             using var scope = CreateTransactionScope();
@@ -128,7 +128,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Update()
         {
-            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             // use ambient transaction
             using var scope = CreateTransactionScope();
@@ -167,7 +167,7 @@ namespace Test.DbRepositories
         [Fact]
         public void UpdateRange()
         {
-            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             // use ambient transaction
             using var scope = CreateTransactionScope();
@@ -233,7 +233,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Delete()
         {
-            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             // use ambient transaction
             using var scope = CreateTransactionScope();
@@ -268,7 +268,7 @@ namespace Test.DbRepositories
         [Fact]
         public void DeleteRange()
         {
-            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             // use ambient transaction
             using var scope = CreateTransactionScope();

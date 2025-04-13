@@ -49,7 +49,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Insert()
         {
-            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 
@@ -88,7 +88,7 @@ namespace Test.DbRepositories
         [Fact]
         public void InsertRange()
         {
-            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 
@@ -141,7 +141,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Update()
         {
-            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 
@@ -182,7 +182,7 @@ namespace Test.DbRepositories
         [Fact]
         public void UpdateRange()
         {
-            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 
@@ -250,7 +250,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Delete()
         {
-            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 
@@ -287,7 +287,7 @@ namespace Test.DbRepositories
         [Fact]
         public void DeleteRange()
         {
-            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 

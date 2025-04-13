@@ -40,7 +40,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Get()
         {
-            using var repo = new SampleEntityReadRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityReadRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 
@@ -60,7 +60,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetRange()
         {
-            using var repo = new SampleEntityReadRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityReadRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 
@@ -82,7 +82,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetAll()
         {
-            using var repo = new SampleEntityReadRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityReadRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 
@@ -100,7 +100,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetAllKeys()
         {
-            using var repo = new SampleEntityReadRepositoryWithContext(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityReadRepositoryWithContext(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var context = CreateContext();
 

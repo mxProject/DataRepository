@@ -31,7 +31,7 @@ namespace Test.DbRepositories
         [Fact]
         public void GetCount()
         {
-            using var repo = new SampleEntityQuery(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityQuery(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var condition = new SampleEntityCondition()
             {
@@ -50,7 +50,7 @@ namespace Test.DbRepositories
         [Fact]
         public void Query()
         {
-            using var repo = new SampleEntityQuery(SampleDatabase.CreateConnection, true);
+            using var repo = new SampleEntityQuery(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             var condition = new SampleEntityCondition()
             {
