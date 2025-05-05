@@ -52,7 +52,7 @@ namespace Test.DbRepositories
             using var repo = new SampleEntityReadRepository(SampleDatabase.CreateConnection, true, SampleDatabase.ConfigureCommand);
 
             // id = -1 is not exist.
-            var entities = repo.GetRange(new[] { 4, 2, -1 }).ToArray();
+            var entities = repo.GetRange([4, 2, -1]).ToArray();
 
             foreach (var entity in entities)
             {
@@ -60,7 +60,7 @@ namespace Test.DbRepositories
             }
 
             Assert.NotNull(entities);
-            Assert.Equal(2, entities.Count());
+            Assert.Equal(2, entities.Length);
         }
 
         /// <summary>

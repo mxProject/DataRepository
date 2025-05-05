@@ -29,7 +29,7 @@ namespace Test.DbRepositories
         /// Creates a new instance of the <see cref="SampleContext"/> class.
         /// </summary>
         /// <returns>A new <see cref="SampleContext"/> instance.</returns>
-        private SampleContext CreateContext()
+        private static SampleContext CreateContext()
         {
             return new SampleContext();
         }
@@ -65,7 +65,7 @@ namespace Test.DbRepositories
             var context = CreateContext();
 
             // id = -1 does not exist.
-            var entities = repo.GetRange(new[] { 4, 2, -1 }, context).ToArray();
+            var entities = repo.GetRange([4, 2, -1], context).ToArray();
 
             foreach (var entity in entities)
             {
@@ -73,7 +73,7 @@ namespace Test.DbRepositories
             }
 
             Assert.NotNull(entities);
-            Assert.Equal(2, entities.Count());
+            Assert.Equal(2, entities.Length);
         }
 
         /// <summary>
