@@ -55,7 +55,7 @@ namespace Test.DbRepositories
         /// <returns>The count of entities.</returns>
         public override int GetCount(Func<IDbCommand> commandActivator, SampleEntityCondition condition)
         {
-            using var command = CreateCommand(true, commandActivator, condition);
+            using var command = CreateSelectCommand(true, commandActivator, condition);
 
             return Convert.ToInt32(command.ExecuteScalar());
         }
@@ -70,7 +70,7 @@ namespace Test.DbRepositories
         /// <returns>The entities that match the condition.</returns>
         public override IEnumerable<SampleEntity> Query(Func<IDbCommand> commandActivator, SampleEntityCondition condition, int skipCount = 0, int? maximumCount = null)
         {
-            using var command = CreateCommand(false, commandActivator, condition, skipCount, maximumCount);
+            using var command = CreateSelectCommand(false, commandActivator, condition, skipCount, maximumCount);
 
             using var reader = command.ExecuteReader();
 
@@ -94,7 +94,7 @@ namespace Test.DbRepositories
         /// <param name="skipCount">The number of entities to skip.</param>
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
         /// <returns>The created command.</returns>
-        private IDbCommand CreateCommand(bool forGetCount, Func<IDbCommand> commandActivator, SampleEntityCondition condition, int skipCount = 0, int? maximumCount = null)
+        internal static IDbCommand CreateSelectCommand(bool forGetCount, Func<IDbCommand> commandActivator, SampleEntityCondition condition, int skipCount = 0, int? maximumCount = null)
         {
             var command = commandActivator();
 

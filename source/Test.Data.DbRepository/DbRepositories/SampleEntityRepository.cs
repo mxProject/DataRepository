@@ -192,6 +192,29 @@ namespace Test.DbRepositories
         /// <returns>Number of affected rows.</returns>
         internal static int InsertSampleEntities(Func<IDbCommand> commandActivator, IEnumerable<SampleEntity> entities)
         {
+            using var command = CreateInsertCommand(commandActivator);
+
+            int affectedRows = 0;
+
+            foreach (var entity in entities)
+            {
+                command.SetParameterValue("@CODE", entity.Code);
+                command.SetParameterValue("@NAME", entity.Name);
+                command.SetParameterValue("@ID", entity.Id);
+
+                affectedRows += command.ExecuteNonQuery();
+            }
+
+            return affectedRows;
+        }
+
+        /// <summary>
+        /// Creates an insert command for the SAMPLE_TABLE.
+        /// </summary>
+        /// <param name="commandActivator">The method to activate a new command.</param>
+        /// <returns>The configured insert command.</returns>
+        internal static IDbCommand CreateInsertCommand(Func<IDbCommand> commandActivator)
+        {
             var sql = new StringBuilder();
 
             sql.AppendLine("insert into SAMPLE_TABLE (");
@@ -208,7 +231,7 @@ namespace Test.DbRepositories
 
             sql.AppendLine(")");
 
-            using var command = commandActivator();
+            var command = commandActivator();
 
             Assert.Equal(SampleDatabase.DefaultCommandTimeout, command.CommandTimeout);
 
@@ -218,18 +241,7 @@ namespace Test.DbRepositories
 
             command.CommandText = sql.ToString();
 
-            int affectedRows = 0;
-
-            foreach (var entity in entities)
-            {
-                command.SetParameterValue("@CODE", entity.Code);
-                command.SetParameterValue("@NAME", entity.Name);
-                command.SetParameterValue("@ID", entity.Id);
-
-                affectedRows += command.ExecuteNonQuery();
-            }
-
-            return affectedRows;
+            return command;
         }
 
         #endregion
@@ -266,24 +278,7 @@ namespace Test.DbRepositories
         /// <returns>Number of affected rows.</returns>
         internal static int UpdateSampleEntities(Func<IDbCommand> commandActivator, IEnumerable<SampleEntity> entities)
         {
-            var sql = new StringBuilder();
-
-            sql.AppendLine("update SAMPLE_TABLE set");
-
-            sql.AppendLine("CODE = @CODE");
-            sql.AppendLine(", NAME = @NAME");
-
-            sql.AppendLine("where ID = @ID");
-
-            using var command = commandActivator();
-
-            Assert.Equal(SampleDatabase.DefaultCommandTimeout, command.CommandTimeout);
-
-            command.AddParameter("@CODE", "");
-            command.AddParameter("@NAME", "");
-            command.AddParameter("@ID", 0);
-
-            command.CommandText = sql.ToString();
+            var command = CreateUpdateCommand(commandActivator);
 
             int affectedRows = 0;
 
@@ -297,6 +292,35 @@ namespace Test.DbRepositories
             }
 
             return affectedRows;
+        }
+
+        /// <summary>
+        /// Creates an update command for the SAMPLE_TABLE.
+        /// </summary>
+        /// <param name="commandActivator">The method to activate a new command.</param>
+        /// <returns>The configured update command.</returns>
+        internal static IDbCommand CreateUpdateCommand(Func<IDbCommand> commandActivator)
+        {
+            var sql = new StringBuilder();
+
+            sql.AppendLine("update SAMPLE_TABLE set");
+
+            sql.AppendLine("CODE = @CODE");
+            sql.AppendLine(", NAME = @NAME");
+
+            sql.AppendLine("where ID = @ID");
+
+            var command = commandActivator();
+
+            Assert.Equal(SampleDatabase.DefaultCommandTimeout, command.CommandTimeout);
+
+            command.AddParameter("@CODE", "");
+            command.AddParameter("@NAME", "");
+            command.AddParameter("@ID", 0);
+
+            command.CommandText = sql.ToString();
+
+            return command;
         }
 
         #endregion
