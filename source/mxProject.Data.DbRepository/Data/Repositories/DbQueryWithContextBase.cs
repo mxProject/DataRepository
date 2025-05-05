@@ -107,7 +107,7 @@ namespace mxProject.Data.Repositories
         /// <param name="skipCount">The number of entities to skip</param>
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
         /// <returns>The entities.</returns>
-        public abstract IEnumerable<TEntity> Query(Func<IDbCommand> commandActivator, TCondition condition, TContext context, int skipCount = 0, int? maximumCount = null);
+        protected abstract IEnumerable<TEntity> Query(Func<IDbCommand> commandActivator, TCondition condition, TContext context, int skipCount, int? maximumCount);
 
         #endregion
 

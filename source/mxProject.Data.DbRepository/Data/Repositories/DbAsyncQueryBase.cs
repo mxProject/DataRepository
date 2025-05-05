@@ -94,7 +94,7 @@ namespace mxProject.Data.Repositories
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The entities.</returns>
-        public abstract IAsyncEnumerable<TEntity> QueryAsync(Func<IDbCommand> commandActivator, TCondition condition, int skipCount, int? maximumCount, CancellationToken cancellationToken);
+        protected abstract IAsyncEnumerable<TEntity> QueryAsync(Func<IDbCommand> commandActivator, TCondition condition, int skipCount, int? maximumCount, CancellationToken cancellationToken);
 
         #endregion
 
@@ -145,7 +145,7 @@ namespace mxProject.Data.Repositories
         /// <param name="commandActivator">The method to activate a new command.</param>
         /// <param name="condition">The conditions.</param>
         /// <returns>Number of entities.</returns>
-        public abstract ValueTask<int> GetCountAsync(Func<IDbCommand> commandActivator, TCondition condition);
+        protected abstract ValueTask<int> GetCountAsync(Func<IDbCommand> commandActivator, TCondition condition);
 
         #endregion
     }

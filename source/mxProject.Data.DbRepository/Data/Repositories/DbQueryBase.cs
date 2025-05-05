@@ -89,7 +89,7 @@ namespace mxProject.Data.Repositories
         /// <param name="skipCount">The number of entities to skip</param>
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
         /// <returns>The entities.</returns>
-        public abstract IEnumerable<TEntity> Query(Func<IDbCommand> commandActivator, TCondition condition, int skipCount = 0, int? maximumCount = null);
+        protected abstract IEnumerable<TEntity> Query(Func<IDbCommand> commandActivator, TCondition condition, int skipCount, int? maximumCount);
 
         #endregion
 
@@ -140,7 +140,7 @@ namespace mxProject.Data.Repositories
         /// <param name="commandActivator">The method to activate a new command.</param>
         /// <param name="condition">The conditions.</param>
         /// <returns>Number of entities.</returns>
-        public abstract int GetCount(Func<IDbCommand> commandActivator, TCondition condition);
+        protected abstract int GetCount(Func<IDbCommand> commandActivator, TCondition condition);
 
         #endregion
     }

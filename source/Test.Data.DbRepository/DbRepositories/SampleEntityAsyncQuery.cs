@@ -34,7 +34,7 @@ namespace Test.DbRepositories
         /// <param name="commandActivator">The method to activate a new command.</param>
         /// <param name="condition">The query condition.</param>
         /// <returns>The count of entities.</returns>
-        public override int GetCount(Func<IDbCommand> commandActivator, SampleEntityCondition condition)
+        protected override int GetCount(Func<IDbCommand> commandActivator, SampleEntityCondition condition)
         {
             using var command = SampleEntityQuery.CreateSelectCommand(true, commandActivator, condition);
 
@@ -47,7 +47,7 @@ namespace Test.DbRepositories
         /// <param name="commandActivator">The method to activate a new command.</param>
         /// <param name="condition">The query condition.</param>
         /// <returns>The count of entities.</returns>
-        public override async ValueTask<int> GetCountAsync(Func<IDbCommand> commandActivator, SampleEntityCondition condition)
+        protected override async ValueTask<int> GetCountAsync(Func<IDbCommand> commandActivator, SampleEntityCondition condition)
         {
             using var command = SampleEntityQuery.CreateSelectCommand(true, commandActivator, condition);
 
@@ -62,7 +62,7 @@ namespace Test.DbRepositories
         /// <param name="skipCount">The number of entities to skip.</param>
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
         /// <returns>The entities that match the condition.</returns>
-        public override IEnumerable<SampleEntity> Query(Func<IDbCommand> commandActivator, SampleEntityCondition condition, int skipCount = 0, int? maximumCount = null)
+        protected override IEnumerable<SampleEntity> Query(Func<IDbCommand> commandActivator, SampleEntityCondition condition, int skipCount, int? maximumCount)
         {
             using var command = SampleEntityQuery.CreateSelectCommand(false, commandActivator, condition, skipCount, maximumCount);
 
@@ -88,7 +88,7 @@ namespace Test.DbRepositories
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The entities that match the condition.</returns>
-        public async override IAsyncEnumerable<SampleEntity> QueryAsync(Func<IDbCommand> commandActivator, SampleEntityCondition condition, int skipCount = 0, int? maximumCount = null, [EnumeratorCancellation]CancellationToken cancellationToken = default)
+        protected async override IAsyncEnumerable<SampleEntity> QueryAsync(Func<IDbCommand> commandActivator, SampleEntityCondition condition, int skipCount, int? maximumCount, [EnumeratorCancellation]CancellationToken cancellationToken)
         {
             using var command = SampleEntityQuery.CreateSelectCommand(false, commandActivator, condition, skipCount, maximumCount);
 
