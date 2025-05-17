@@ -4,23 +4,25 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Transactions;
 
 namespace mxProject.Data.Repositories
 {
     /// <summary>
-    /// A basic implementation of a query that uses a database.
+    /// A basic implementation of an asynchronously query that uses a database.
     /// </summary>
     /// <typeparam name="TEntity">The entity type.</typeparam>
     /// <typeparam name="TCondition">The query condition type.</typeparam>
-    public abstract class DbQueryBase<TEntity, TCondition> : DbRepositoryBase<TEntity>, IDataQuery<TEntity, TCondition>
+    public abstract class DbAsyncQueryBase<TEntity, TCondition> : DbQueryBase<TEntity, TCondition>, IAsyncDataQuery<TEntity, TCondition>
     {
         /// <summary>
         /// Creates a new instance.
         /// </summary>
         /// <param name="connectionActivator">The method to activate a connection.</param>
         /// <param name="useTransactionScope">A value that indicates whether to use ambient transactions using TransactionScope.</param>
-        protected DbQueryBase(Func<IDbConnection> connectionActivator, bool useTransactionScope)
+        protected DbAsyncQueryBase(Func<IDbConnection> connectionActivator, bool useTransactionScope)
             : base(connectionActivator, useTransactionScope)
         {
         }
@@ -31,19 +33,19 @@ namespace mxProject.Data.Repositories
         /// <param name="connectionActivator">The method to activate a connection.</param>
         /// <param name="useTransactionScope">A value that indicates whether to use ambient transactions using TransactionScope.</param>
         /// <param name="configureCommand">A method to configure a command.</param>
-        protected DbQueryBase(Func<IDbConnection> connectionActivator, bool useTransactionScope, Action<IDbCommand> configureCommand)
+        protected DbAsyncQueryBase(Func<IDbConnection> connectionActivator, bool useTransactionScope, Action<IDbCommand> configureCommand)
             : base(connectionActivator, useTransactionScope, configureCommand)
         {
         }
 
-        #region Query
+        #region QueryAsync
 
         /// <inheritdoc/>
-        public IEnumerable<TEntity> Query(TCondition condition, int skipCount = 0, int? maximumCount = null)
+        public IAsyncEnumerable<TEntity> QueryAsync(TCondition condition, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default)
         {
-            return Executor.ExecuteIteratorOnNewConnection(
-                (this, condition, skipCount, maximumCount),
-                (x, commandActivator) => x.Item1.Query(commandActivator, x.condition, x.skipCount, x.maximumCount)
+            return Executor.ExecuteIteratorOnNewConnectionAsync(
+                (this, condition, skipCount, maximumCount, cancellationToken),
+                (x, commandActivator) => x.Item1.QueryAsync(commandActivator, x.condition, x.skipCount, x.maximumCount, x.cancellationToken)
                 );
         }
 
@@ -54,13 +56,14 @@ namespace mxProject.Data.Repositories
         /// <param name="condition">The conditions.</param>
         /// <param name="skipCount">The number of entities to skip</param>
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The entities.</returns>
-        public IEnumerable<TEntity> Query(IDbConnection connection, TCondition condition, int skipCount = 0, int? maximumCount = null)
+        public IAsyncEnumerable<TEntity> QueryAsync(IDbConnection connection, TCondition condition, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default)
         {
-            return Executor.ExecuteOnConnection(
-                (this, condition, skipCount, maximumCount),
+            return Executor.ExecuteIteratorOnConnectionAsync(
+                (this, condition, skipCount, maximumCount, cancellationToken),
                 connection,
-                (x, commandActivator) => x.Item1.Query(commandActivator, x.condition, x.skipCount, x.maximumCount)
+                (x, commandActivator) => x.Item1.QueryAsync(commandActivator, x.condition, x.skipCount, x.maximumCount, x.cancellationToken)
                 );
         }
 
@@ -71,13 +74,14 @@ namespace mxProject.Data.Repositories
         /// <param name="condition">The conditions.</param>
         /// <param name="skipCount">The number of entities to skip</param>
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The entities.</returns>
-        public IEnumerable<TEntity> Query(IDbTransaction transaction, TCondition condition, int skipCount = 0, int? maximumCount = null)
+        public IAsyncEnumerable<TEntity> QueryAsync(IDbTransaction transaction, TCondition condition, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default)
         {
-            return Executor.ExecuteOnTransaction(
-                (this, condition, skipCount, maximumCount),
+            return Executor.ExecuteIteratorOnTransactionAsync(
+                (this, condition, skipCount, maximumCount, cancellationToken),
                 transaction,
-                (x, commandActivator) => x.Item1.Query(commandActivator, x.condition, x.skipCount, x.maximumCount)
+                (x, commandActivator) => x.Item1.QueryAsync(commandActivator, x.condition, x.skipCount, x.maximumCount, x.cancellationToken)
                 );
         }
 
@@ -88,19 +92,20 @@ namespace mxProject.Data.Repositories
         /// <param name="condition">The conditions.</param>
         /// <param name="skipCount">The number of entities to skip</param>
         /// <param name="maximumCount">The maximum number of entities to retrieve.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The entities.</returns>
-        protected abstract IEnumerable<TEntity> Query(Func<IDbCommand> commandActivator, TCondition condition, int skipCount, int? maximumCount);
+        protected abstract IAsyncEnumerable<TEntity> QueryAsync(Func<IDbCommand> commandActivator, TCondition condition, int skipCount, int? maximumCount, CancellationToken cancellationToken);
 
         #endregion
 
-        #region GetCount
+        #region GetCountAsync
 
         /// <inheritdoc/>
-        public int GetCount(TCondition condition)
+        public ValueTask<int> GetCountAsync(TCondition condition)
         {
-            return Executor.ExecuteOnNewConnection(
+            return Executor.ExecuteOnNewConnectionAsync(
                 (this, condition),
-                (x, commandActivator) => x.Item1.GetCount(commandActivator, x.condition)
+                (x, commandActivator) => x.Item1.GetCountAsync(commandActivator, x.condition)
                 );
         }
 
@@ -110,12 +115,12 @@ namespace mxProject.Data.Repositories
         /// <param name="connection">The current connection.</param>
         /// <param name="condition">The conditions.</param>
         /// <returns>Number of entities.</returns>
-        public int GetCount(IDbConnection connection, TCondition condition)
+        public ValueTask<int> GetCountAsync(IDbConnection connection, TCondition condition)
         {
-            return Executor.ExecuteOnConnection(
+            return Executor.ExecuteOnConnectionAsync(
                 (this, condition),
                 connection,
-                (x, commandActivator) => x.Item1.GetCount(commandActivator, x.condition)
+                (x, commandActivator) => x.Item1.GetCountAsync(commandActivator, x.condition)
                 );
         }
 
@@ -125,12 +130,12 @@ namespace mxProject.Data.Repositories
         /// <param name="transaction">The current transaction.</param>
         /// <param name="condition">The conditions.</param>
         /// <returns>Number of entities.</returns>
-        public int GetCount(IDbTransaction transaction, TCondition condition)
+        public ValueTask<int> GetCountAsync(IDbTransaction transaction, TCondition condition)
         {
-            return Executor.ExecuteOnTransaction(
+            return Executor.ExecuteOnTransactionAsync(
                 (this, condition),
                 transaction,
-                (x, commandActivator) => x.Item1.GetCount(commandActivator, x.condition)
+                (x, commandActivator) => x.Item1.GetCountAsync(commandActivator, x.condition)
                 );
         }
 
@@ -140,7 +145,7 @@ namespace mxProject.Data.Repositories
         /// <param name="commandActivator">The method to activate a new command.</param>
         /// <param name="condition">The conditions.</param>
         /// <returns>Number of entities.</returns>
-        protected abstract int GetCount(Func<IDbCommand> commandActivator, TCondition condition);
+        protected abstract ValueTask<int> GetCountAsync(Func<IDbCommand> commandActivator, TCondition condition);
 
         #endregion
     }

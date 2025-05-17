@@ -32,7 +32,7 @@ namespace Test.DbRepositories
         /// </summary>
         /// <param name="connection">The database connection.</param>
         /// <returns>A new instance of <see cref="SampleDbContext"/>.</returns>
-        private SampleDbContext CreateContext(IDbConnection connection)
+        private static SampleDbContext CreateContext(IDbConnection connection)
         {
             return new SampleDbContext(connection);
         }
@@ -42,7 +42,7 @@ namespace Test.DbRepositories
         /// </summary>
         /// <param name="transaction">The database transaction.</param>
         /// <returns>A new instance of <see cref="SampleDbContext"/>.</returns>
-        private SampleDbContext CreateContext(IDbTransaction transaction)
+        private static SampleDbContext CreateContext(IDbTransaction transaction)
         {
             return new SampleDbContext(transaction);
         }

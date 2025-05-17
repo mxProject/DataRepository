@@ -29,7 +29,7 @@ namespace Test.DbRepositories
         /// Creates a new transaction scope.
         /// </summary>
         /// <returns>A new <see cref="TransactionScope"/> instance.</returns>
-        private TransactionScope CreateTransactionScope()
+        private static TransactionScope CreateTransactionScope()
         {
             return new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled);
         }
@@ -38,7 +38,7 @@ namespace Test.DbRepositories
         /// Creates a new sample context.
         /// </summary>
         /// <returns>A new <see cref="SampleContext"/> instance.</returns>
-        private SampleContext CreateContext()
+        private static SampleContext CreateContext()
         {
             return new SampleContext();
         }
