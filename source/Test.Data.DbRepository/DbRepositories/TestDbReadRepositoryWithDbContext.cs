@@ -31,7 +31,7 @@ namespace Test.DbRepositories
         /// </summary>
         /// <param name="connection">The database connection.</param>
         /// <returns>A new instance of <see cref="SampleDbContext"/>.</returns>
-        private SampleDbContext CreateContext(IDbConnection connection)
+        private static SampleDbContext CreateContext(IDbConnection connection)
         {
             return new SampleDbContext(connection);
         }
@@ -41,7 +41,7 @@ namespace Test.DbRepositories
         /// </summary>
         /// <param name="transaction">The database transaction.</param>
         /// <returns>A new instance of <see cref="SampleDbContext"/>.</returns>
-        private SampleDbContext CreateContext(IDbTransaction transaction)
+        private static SampleDbContext CreateContext(IDbTransaction transaction)
         {
             return new SampleDbContext(transaction);
         }
@@ -111,7 +111,7 @@ namespace Test.DbRepositories
             var context = CreateContext(connection);
 
             // id = -1 is not exist.
-            var entities = repo.GetRange(new[] { 4, 2, -1 }, context).ToArray();
+            var entities = repo.GetRange([4, 2, -1], context).ToArray();
 
             foreach (var entity in entities)
             {
@@ -119,7 +119,7 @@ namespace Test.DbRepositories
             }
 
             Assert.NotNull(entities);
-            Assert.Equal(2, entities.Count());
+            Assert.Equal(2, entities.Length);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Test.DbRepositories
             var context = CreateContext(transaction);
 
             // id = -1 is not exist.
-            var entities = repo.GetRange(new[] { 4, 2, -1 }, context).ToArray();
+            var entities = repo.GetRange([4, 2, -1], context).ToArray();
 
             foreach (var entity in entities)
             {
@@ -147,7 +147,7 @@ namespace Test.DbRepositories
             }
 
             Assert.NotNull(entities);
-            Assert.Equal(2, entities.Count());
+            Assert.Equal(2, entities.Length);
         }
 
         /// <summary>

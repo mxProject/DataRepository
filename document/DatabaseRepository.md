@@ -14,14 +14,26 @@
     - [DbRepositoryWithContextBase{TEntity, TContext} Class](#dbrepositorywithcontextbasetentity-tcontext-class)
   - [Basic repositories](#basic-repositories)
     - [DbReadRepositoryBase{TEntity, TKey} Class](#dbreadrepositorybasetentity-tkey-class)
+    - [DbAsyncReadRepositoryBase{TEntity, TKey} Class](#dbasyncreadrepositorybasetentity-tkey-class)
     - [DbReadRepositoryWithUniqueKeyBase{TEntity, TPrimaryKey, TUniqueKey} Class](#dbreadrepositorywithuniquekeybasetentity-tprimarykey-tuniquekey-class)
+    - [DbAsyncReadRepositoryWithUniqueKeyBase{TEntity, TPrimaryKey, TUniqueKey} Class](#dbasyncreadrepositorywithuniquekeybasetentity-tprimarykey-tuniquekey-class)
     - [DbReadWriteRepositoryBase{TEntity, TKey} Class](#dbreadwriterepositorybasetentity-tkey-class)
+    - [DbAsyncReadWriteRepositoryBase{TEntity, TKey} Class](#dbasyncreadwriterepositorybasetentity-tkey-class)
     - [DbReadWriteRepositoryWithUniqueKeyBase{TEntity, TPrimaryKey, TUniqueKey} Class](#dbreadwriterepositorywithuniquekeybasetentity-tprimarykey-tuniquekey-class)
+    - [DbAsyncReadWriteRepositoryWithUniqueKeyBase{TEntity, TPrimaryKey, TUniqueKey} Class](#dbasyncreadwriterepositorywithuniquekeybasetentity-tprimarykey-tuniquekey-class)
+    - [DbQueryBase{TEntity, TCondition} Class](#dbquerybasetentity-tcondition-class)
+    - [DbAsyncQueryBase{TEntity, TCondition} Class](#dbasyncquerybasetentity-tcondition-class)
   - [Repositories that use the context](#repositories-that-use-the-context)
     - [DbReadRepositoryWithContextBase{TEntity, TKey, TContext} Class](#dbreadrepositorywithcontextbasetentity-tkey-tcontext-class)
+    - [DbAsyncReadRepositoryWithContextBase{TEntity, TKey, TContext} Class](#dbasyncreadrepositorywithcontextbasetentity-tkey-tcontext-class)
     - [DbReadRepositoryWithUniqueKeyWithContextBase{TEntity, TPrimaryKey, TUniqueKey, TContext} Class](#dbreadrepositorywithuniquekeywithcontextbasetentity-tprimarykey-tuniquekey-tcontext-class)
+    - [DbAsyncReadRepositoryWithUniqueKeyWithContextBase{TEntity, TPrimaryKey, TUniqueKey, TContext} Class](#dbasyncreadrepositorywithuniquekeywithcontextbasetentity-tprimarykey-tuniquekey-tcontext-class)
     - [DbReadWriteRepositoryWithContextBase{TEntity, TKey, TContext} Class](#dbreadwriterepositorywithcontextbasetentity-tkey-tcontext-class)
+    - [DbAsyncReadWriteRepositoryWithContextBase{TEntity, TKey, TContext} Class](#dbasyncreadwriterepositorywithcontextbasetentity-tkey-tcontext-class)
     - [DbReadWriteRepositoryWithUniqueKeyWithContextBase{TEntity, TPrimaryKey, TUniqueKey, TContext} Class](#dbreadwriterepositorywithuniquekeywithcontextbasetentity-tprimarykey-tuniquekey-tcontext-class)
+    - [DbAsyncReadWriteRepositoryWithUniqueKeyWithContextBase{TEntity, TPrimaryKey, TUniqueKey, TContext} Class](#dbasyncreadwriterepositorywithuniquekeywithcontextbasetentity-tprimarykey-tuniquekey-tcontext-class)
+    - [DbQueryWithContextBase{TEntity, TCondition, TContext} Class](#dbquerywithcontextbasetentity-tcondition-tcontext-class)
+    - [DbAsyncQueryWithContextBase{TEntity, TCondition, TContext} Class](#dbasyncquerywithcontextbasetentity-tcondition-tcontext-class)
 
 
 ## Sample
@@ -30,7 +42,7 @@
 
 This is a repository that retrieves entities by primary key.
 
-```c#
+```csharp
 // create a repository.
 using var repo = new SampleEntityReadRepository(CreateConnection, true);
 
@@ -45,7 +57,7 @@ if (entity != null)
 
 <details><summary>Implementing the SampleEntityReadRepository class</summary>
 
-```c#
+```csharp
 /// <summary>
 /// Provides methods to read SampleEntity from the database.
 /// </summary>
@@ -191,7 +203,7 @@ This is a repository that retrieves and updates entities by primary key.
 
 If the database provider you are using supports ambient transaction scope, you can implement it as follows:
 
-```c#
+```csharp
 // create a repository.
 using var repo = new SampleEntityRepository(CreateConnection, true);
 
@@ -214,7 +226,7 @@ scope.Complete();
 
 <details><summary>Implementing the SampleEntityRepository class</summary>
 
-```c#
+```csharp
 /// <summary>
 /// Repository class for sample entities.
 /// </summary>
@@ -429,7 +441,7 @@ internal class SampleEntityRepository : DbReadWriteRepositoryBase<SampleEntity, 
 
 If you are not using an implicit transaction using TransactionScope, pass the transaction using the context class.
 
-```c#
+```csharp
 using var repo = new SampleEntityRepositoryWithDbContext(null, true);
 
 var entity = new SampleEntity()
@@ -460,7 +472,7 @@ transaction.Commit();
 
 The implementation is almost the same as the SampleEntityRepository class because the implementation regarding connection and transaction is encapsulated in the base class.
 
-```c#
+```csharp
 /// <summary>
 /// Repository class for sample entities.
 /// </summary>
@@ -795,7 +807,7 @@ internal class SampleEntityRepositoryWithDbContext : DbReadWriteRepositoryWithCo
 
 This is a data query repository that respects Command Query Responsibility Segregation (CQRS).
 
-```c#
+```csharp
 // create a repository.
 using var repo = new SampleEntityQuery(CreateConnection, true);
 
@@ -816,7 +828,7 @@ foreach (var entity in entities)
 
 <details><summary>Implementing the SampleEntityQuery class</summary>
 
-```c#
+```csharp
 /// <summary>
 /// Provides methods to query SampleEntity from the database.
 /// </summary>
@@ -937,7 +949,7 @@ internal class SampleEntityQuery : DbQueryBase<SampleEntity, SampleEntityConditi
 
 ```mermaid
 classDiagram
-    direction BT
+    direction RL
     class IDataRepository
     <<Interface>> IDataRepository
     class IReadDataRepository
@@ -948,6 +960,15 @@ classDiagram
     <<Interface>> IWriteDataRepository
     class IDataQuery
     <<Interface>> IDataQuery
+
+    class IAsyncReadDataRepository
+    <<Interface>> IAsyncReadDataRepository
+    class IAsyncReadDataRepositoryWithUniqueKey
+    <<Interface>> IAsyncReadDataRepositoryWithUniqueKey
+    class IAsyncWriteDataRepository
+    <<Interface>> IAsyncWriteDataRepository
+    class IAsyncDataQuery
+    <<Interface>> IAsyncDataQuery
 
     DbRepositoryBase ..|> IDataRepository
     DbReadRepositoryBase --|> DbRepositoryBase
@@ -961,14 +982,21 @@ classDiagram
     IDataQuery --|> IDataRepository
     DbQueryBase ..|> IDataQuery
 
-    SampleEntityReadRepository --|> DbReadRepositoryBase
-    SampleEntityRepository  --|> DbReadWriteRepositoryBase
-    SampleEntityQuery  --|> DbQueryBase
+    DbAsyncReadRepositoryBase --|> DbReadRepositoryBase
+    DbAsyncReadRepositoryBase ..|> IAsyncReadDataRepository
+    DbAsyncReadRepositoryWithUniqueKeyBase --|> DbReadRepositoryWithUniqueKeyBase
+    DbAsyncReadRepositoryWithUniqueKeyBase ..|> IAsyncReadDataRepositoryWithUniqueKey
+    DbAsyncReadWriteRepositoryBase --|> DbAsyncReadRepositoryBase
+    DbAsyncReadWriteRepositoryBase ..|> IAsyncWriteDataRepository
+    DbAsyncReadWriteRepositoryWithUniqueKeyBase --|> DbAsyncReadRepositoryWithUniqueKeyBase
+    DbAsyncReadWriteRepositoryWithUniqueKeyBase ..|> IAsyncWriteDataRepository
+    DbAsyncQueryBase --|> DbQueryBase
+    DbAsyncQueryBase ..|> IAsyncDataQuery
 ```
 
 ```mermaid
 classDiagram
-    direction BT
+    direction RL
     class IDataRepository
     <<Interface>> IDataRepository
     class IReadDataRepositoryWithContext
@@ -979,6 +1007,15 @@ classDiagram
     <<Interface>> IWriteDataRepositoryWithContext
     class IDataQueryWithContext
     <<Interface>> IDataQueryWithContext
+
+    class IAsyncReadDataRepositoryWithContext
+    <<Interface>> IAsyncReadDataRepositoryWithContext
+    class IAsyncReadDataRepositoryWithUniqueKeyWithContext
+    <<Interface>> IAsyncReadDataRepositoryWithUniqueKeyWithContext
+    class IAsyncWriteDataRepositoryWithContext
+    <<Interface>> IAsyncWriteDataRepositoryWithContext
+    class IAsyncDataQueryWithContext
+    <<Interface>> IAsyncDataQueryWithContext
 
     DbRepositoryWithContextBase ..|> IDataRepository
     DbReadRepositoryWithContextBase --|> DbRepositoryWithContextBase
@@ -992,7 +1029,16 @@ classDiagram
     IDataQueryWithContext --|> IDataRepository
     DbQueryWithContextBase ..|> IDataQueryWithContext
 
-    SampleEntityRepositoryWithDbContext --|> DbReadWriteRepositoryWithContextBase
+    DbAsyncReadRepositoryWithContextBase --|> DbReadRepositoryWithContextBase
+    DbAsyncReadRepositoryWithContextBase ..|> IAsyncReadDataRepositoryWithContext
+    DbAsyncReadRepositoryWithUniqueKeyWithContextBase --|> DbReadRepositoryWithUniqueKeyWithContextBase
+    DbAsyncReadRepositoryWithUniqueKeyWithContextBase ..|> IAsyncReadDataRepositoryWithUniqueKeyWithContext
+    DbAsyncReadWriteRepositoryWithContextBase --|> DbAsyncReadRepositoryWithContextBase
+    DbAsyncReadWriteRepositoryWithContextBase ..|> IAsyncWriteDataRepositoryWithContext
+    DbAsyncReadWriteRepositoryWithUniqueKeyWithContextBase --|> DbAsyncReadRepositoryWithUniqueKeyWithContextBase
+    DbAsyncReadWriteRepositoryWithUniqueKeyWithContextBase ..|> IAsyncWriteDataRepositoryWithContext
+    DbAsyncQueryWithContextBase --|> DbQueryWithContextBase
+    DbAsyncQueryWithContextBase ..|> IAsyncDataQueryWithContext
 ```
 
 ## Base classes
@@ -1006,7 +1052,7 @@ A basic implementation of a repository that stores data in a database.
   * true : When creating a connection, does not begin an explicit transaction if there is an active TransactionScope.
   * false : When creating a connection, always begin an explicit transaction.
 
-```c#
+```csharp
 public abstract class DbRepositoryBase<TEntity> : IDataRepository<TEntity>
 {
     protected DbRepositoryBase(Func<IDbConnection> connectionActivator, bool useTransactionScope)
@@ -1027,7 +1073,7 @@ The DbCommandExecutor class is a helper class used to execute commands and has t
   * No transaction is begun.
 * Executes the specified command using the specified transaction.
 
-```c#
+```csharp
 public class DbCommandExecutor
 {
     public DbCommandExecutor(Func<IDbConnection> connectionActivator, bool useTransactionScope)
@@ -1061,7 +1107,7 @@ A basic implementation of a repository that stores data in a database.
 * The constructor arguments are the same as for the DbRepositoryBase&lt;TEntity&gt; class above.
 * If the type specified in TContext implements the IDbContext interface, the connection and transaction are obtained from the context and a new connection is not created.
 
-```c#
+```csharp
 public abstract class DbRepositoryWithContextBase<TEntity, TContext> : IDataRepository<TEntity>
     where TContext : IDataRepositoryContext
 {
@@ -1083,7 +1129,7 @@ public abstract class DbRepositoryWithContextBase<TEntity, TContext> : IDataRepo
 
 Like the DbCommandExecutor class, the DbCommandExecutorWithContext<TContext> class is a helper class that is used when executing commands. The context is passed as an argument to the command execution method.
 
-```c#
+```csharp
 public class DbCommandExecutorWithContext<TContext>
     where TContext : IDataRepositoryContext
 {
@@ -1131,8 +1177,9 @@ Inherit the DbRepositoryBase&lt;TEntity&gt; class and implement each of the repo
   * Abstract method that perform database operations
     * Override this method to build and execute a database command(s).
 
-```c#
-public abstract class DbReadRepositoryBase<TEntity, TKey> : DbRepositoryBase<TEntity>, IReadDataRepository<TEntity, TKey>
+```csharp
+public abstract class DbReadRepositoryBase<TEntity, TKey>
+    : DbRepositoryBase<TEntity>, IReadDataRepository<TEntity, TKey>
 {
     public TEntity? Get(TKey key);
     public TEntity? Get(IDbConnection connection, TKey key);
@@ -1156,6 +1203,49 @@ public abstract class DbReadRepositoryBase<TEntity, TKey> : DbRepositoryBase<TEn
 }
 ```
 
+### DbAsyncReadRepositoryBase{TEntity, TKey} Class
+
+* Base implementation of the IAsyncReadDataRepository&lt;TEntity, TKey&gt; interface.
+* Inherit from the DbReadRepositoryBase&lt;TEntity, TKey&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbReadRepositoryBase<TEntity, TKey>
+    : DbReadRepositoryBase<TEntity, TKey>, IAsyncReadDataRepository<TEntity, TKey>
+{
+    public ValueTask<TEntity?> GetAsync(TKey key);
+    public ValueTask<TEntity?> GetAsync(IDbConnection connection, TKey key);
+    public ValueTask<TEntity?> GetAsync(IDbTransaction transaction, TKey key);
+    protected abstract ValueTask<TEntity?> GetAsync(Func<IDbCommand> commandActivator, TKey key);
+
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IDbConnection connection, IEnumerable<TKey> keys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IDbConnection connection, IAsyncEnumerable<TKey> keys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IDbTransaction transaction, IEnumerable<TKey> keys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TKey> keys, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TKey> keys, CancellationToken cancellationToken);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TKey> keys, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TEntity> GetAllAsync(CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetAllAsync(IDbConnection connection, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetAllAsync(IDbTransaction transaction, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetAllAsync(Func<IDbCommand> commandActivator, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TKey> GetAllKeysAsync(CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TKey> GetAllKeysAsync(IDbConnection connection, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TKey> GetAllKeysAsync(IDbTransaction transaction, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TKey> GetAllKeysAsync(Func<IDbCommand> commandActivator, CancellationToken cancellationToken);
+}
+```
+
 ### DbReadRepositoryWithUniqueKeyBase{TEntity, TPrimaryKey, TUniqueKey} Class
 
 * Base implementation of the IReadDataRepositoryWithUniqueKey&lt;TEntity, TPrimaryKey, TUniqueKey&gt; interface.
@@ -1170,8 +1260,9 @@ public abstract class DbReadRepositoryBase<TEntity, TKey> : DbRepositoryBase<TEn
   * Abstract method that perform database operations
     * Override this method to build and execute a database command(s).
 
-```c#
-public abstract class DbReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey> : DbRepositoryBase<TEntity>, IReadDataRepositoryWithUniqueKey<TEntity, TPrimaryKey, TUniqueKey>
+```csharp
+public abstract class DbReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey>
+    : DbRepositoryBase<TEntity>, IReadDataRepositoryWithUniqueKey<TEntity, TPrimaryKey, TUniqueKey>
 {
     public TEntity? GetByPrimaryKey(TPrimaryKey primaryKey);
     public TEntity? GetByPrimaryKey(IDbConnection connection, TPrimaryKey primaryKey);
@@ -1210,6 +1301,69 @@ public abstract class DbReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TU
 }
 ```
 
+### DbAsyncReadRepositoryWithUniqueKeyBase{TEntity, TPrimaryKey, TUniqueKey} Class
+
+* Base implementation of the IAsyncReadDataRepositoryWithUniqueKey&lt;TEntity, TPrimaryKey, TUniqueKey&gt; interface.
+* Inherit from the DbReadRepositoryWithUniqueKeyBase&lt;TEntity, TPrimaryKey, TUniqueKey&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbAsyncReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey>
+    : DbReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey>, IAsyncReadDataRepositoryWithUniqueKey<TEntity, TPrimaryKey, TUniqueKey>
+{
+    public ValueTask<TEntity?> GetByPrimaryKeyAsync(TPrimaryKey primaryKey);
+    public ValueTask<TEntity?> GetByPrimaryKeyAsync(IDbConnection connection, TPrimaryKey primaryKey);
+    public ValueTask<TEntity?> GetByPrimaryKeyAsync(IDbTransaction transaction, TPrimaryKey primaryKey);
+    protected abstract ValueTask<TEntity?> GetByPrimaryKeyAsync(Func<IDbCommand> commandActivator, TPrimaryKey primaryKey);
+
+    public ValueTask<TEntity?> GetByUniqueKeyAsync(TUniqueKey uniqueKey);
+    public ValueTask<TEntity?> GetByUniqueKeyAsync(IDbConnection connection, TUniqueKey uniqueKey);
+    public ValueTask<TEntity?> GetByUniqueKeyAsync(IDbTransaction transaction, TUniqueKey uniqueKey);
+    protected abstract ValueTask<TEntity?> GetByUniqueKeyAsync(Func<IDbCommand> commandActivator, TUniqueKey uniqueKey);
+
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IEnumerable<TPrimaryKey> primaryKeys, CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IAsyncEnumerable<TPrimaryKey> primaryKeys, CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IDbConnection connection, IEnumerable<TPrimaryKey> primaryKeys, CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IDbConnection connection, IAsyncEnumerable<TPrimaryKey> primaryKeys, CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IDbTransaction transaction, IEnumerable<TPrimaryKey> primaryKeys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IDbTransaction transaction, IAsyncEnumerable<TPrimaryKey> primaryKeys, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(Func<IDbCommand> commandActivator, IEnumerable<TPrimaryKey> primaryKeys, CancellationToken cancellationToken);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TPrimaryKey> primaryKeys, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IEnumerable<TUniqueKey> uniqueKeys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IAsyncEnumerable<TUniqueKey> uniqueKeys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IDbConnection connection, IEnumerable<TUniqueKey> uniqueKeys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IDbConnection connection, IAsyncEnumerable<TUniqueKey> uniqueKeys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IDbTransaction transaction, IEnumerable<TUniqueKey> uniqueKeys, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IDbTransaction transaction, IAsyncEnumerable<TUniqueKey> uniqueKeys, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(Func<IDbCommand> commandActivator, IEnumerable<TUniqueKey> uniqueKeys, CancellationToken cancellationToken);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TUniqueKey> uniqueKeys, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TEntity> GetAllAsync(CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetAllAsync(IDbConnection connection, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetAllAsync(IDbTransaction transaction, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetAllAsync(Func<IDbCommand> commandActivator, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TPrimaryKey> GetAllPrimaryKeysAsync(CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TPrimaryKey> GetAllPrimaryKeysAsync(IDbConnection connection, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TPrimaryKey> GetAllPrimaryKeysAsync(IDbTransaction transaction, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TPrimaryKey> GetAllPrimaryKeysAsync(Func<IDbCommand> commandActivator, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TUniqueKey> GetAllUniqueKeysAsync(CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TUniqueKey> GetAllUniqueKeysAsync(IDbConnection connection, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TUniqueKey> GetAllUniqueKeysAsync(IDbTransaction transaction, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TUniqueKey> GetAllUniqueKeysAsync(Func<IDbCommand> commandActivator, CancellationToken cancellationToken);
+}
+```
+
 ### DbReadWriteRepositoryBase{TEntity, TKey} Class
 
 * Base implementation of the IWriteDataRepository&lt;TEntity&gt; interface.
@@ -1224,8 +1378,9 @@ public abstract class DbReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TU
   * Abstract method that perform database operations
     * Override this method to build and execute a database command(s).
 
-```c#
-public abstract class DbReadWriteRepositoryBase<TEntity, TKey> : DbReadRepositoryBase<TEntity, TKey>, IWriteDataRepository<TEntity>
+```csharp
+public abstract class DbReadWriteRepositoryBase<TEntity, TKey>
+    : DbReadRepositoryBase<TEntity, TKey>, IWriteDataRepository<TEntity>
 {
     public int Insert(TEntity entity);
     public int Insert(IDbConnection connection, TEntity entity);
@@ -1256,6 +1411,68 @@ public abstract class DbReadWriteRepositoryBase<TEntity, TKey> : DbReadRepositor
     public int DeleteRange(IDbConnection connection, IEnumerable<TEntity> entities);
     public int DeleteRange(IDbTransaction transaction, IEnumerable<TEntity> entities);
     protected abstract int DeleteRange(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities);
+}
+```
+
+### DbAsyncReadWriteRepositoryBase{TEntity, TKey} Class
+
+* Base implementation of the IAsyncWriteDataRepository&lt;TEntity&gt; interface.
+* Inherit from the DbAsyncReadRepositoryBase&lt;TEntity, TKey&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbAsyncReadWriteRepositoryBase<TEntity, TKey>
+    : DbAsyncReadRepositoryBase<TEntity, TKey>, IAsyncWriteDataRepository<TEntity>
+{
+    public ValueTask<int> InsertAsync(TEntity entity);
+    public ValueTask<int> InsertAsync(IDbConnection connection, TEntity entity);
+    public ValueTask<int> InsertAsync(IDbTransaction transaction, TEntity entity);
+    protected abstract ValueTask<int> InsertAsync(Func<IDbCommand> commandActivator, TEntity entity);
+
+    public ValueTask<int> InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> InsertRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> InsertRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken);
+
+    public ValueTask<int> UpdateAsync(TEntity entity);
+    public ValueTask<int> UpdateAsync(IDbConnection connection, TEntity entity);
+    public ValueTask<int> UpdateAsync(IDbTransaction transaction, TEntity entity);
+    protected abstract ValueTask<int> UpdateAsync(Func<IDbCommand> commandActivator, TEntity entity);
+
+    public ValueTask<int> UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> UpdateRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> UpdateRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken);
+
+    public ValueTask<int> DeleteAsync(TEntity entity);
+    public ValueTask<int> DeleteAsync(IDbConnection connection, TEntity entity);
+    public ValueTask<int> DeleteAsync(IDbTransaction transaction, TEntity entity);
+    protected abstract ValueTask<int> DeleteAsync(Func<IDbCommand> commandActivator, TEntity entity);
+
+    public ValueTask<int> DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> DeleteRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> DeleteRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken);
 }
 ```
 
@@ -1273,8 +1490,9 @@ public abstract class DbReadWriteRepositoryBase<TEntity, TKey> : DbReadRepositor
   * Abstract method that perform database operations
     * Override this method to build and execute a database command(s).
 
-```c#
-public abstract class DbReadWriteRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey> : DbReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey>, IWriteDataRepository<TEntity>
+```csharp
+public abstract class DbReadWriteRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey>
+    : DbReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey>, IWriteDataRepository<TEntity>
 {
     public int Insert(TEntity entity);
     public int Insert(IDbConnection connection, TEntity entity);
@@ -1307,6 +1525,129 @@ public abstract class DbReadWriteRepositoryWithUniqueKeyBase<TEntity, TPrimaryKe
     protected abstract int DeleteRange(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities);
 }
 ```
+
+### DbAsyncReadWriteRepositoryWithUniqueKeyBase{TEntity, TPrimaryKey, TUniqueKey} Class
+
+* Base implementation of the IAsyncWriteDataRepository&lt;TEntity&gt; interface.
+* Inherit from the DbAsyncReadRepositoryWithUniqueKeyBase&lt;TEntity, TPrimaryKey, TUniqueKey&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbReadWriteRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey>
+    : DbAsyncReadRepositoryWithUniqueKeyBase<TEntity, TPrimaryKey, TUniqueKey>, IAsyncWriteDataRepository<TEntity>
+{
+    public ValueTask<int> InsertAsync(TEntity entity);
+    public ValueTask<int> InsertAsync(IDbConnection connection, TEntity entity);
+    public ValueTask<int> InsertAsync(IDbTransaction transaction, TEntity entity);
+    protected abstract ValueTask<int> InsertAsync(Func<IDbCommand> commandActivator, TEntity entity);
+
+    public ValueTask<int> InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> InsertRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> InsertRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken);
+
+    public ValueTask<int> UpdateAsync(TEntity entity);
+    public ValueTask<int> UpdateAsync(IDbConnection connection, TEntity entity);
+    public ValueTask<int> UpdateAsync(IDbTransaction transaction, TEntity entity);
+    protected abstract ValueTask<int> UpdateAsync(Func<IDbCommand> commandActivator, TEntity entity);
+
+    public ValueTask<int> UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> UpdateRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> UpdateRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken);
+
+    public ValueTask<int> DeleteAsync(TEntity entity);
+    public ValueTask<int> DeleteAsync(IDbConnection connection, TEntity entity);
+    public ValueTask<int> DeleteAsync(IDbTransaction transaction, TEntity entity);
+    protected abstract ValueTask<int> DeleteAsync(Func<IDbCommand> commandActivator, TEntity entity);
+
+    public ValueTask<int> DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> DeleteRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> DeleteRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, CancellationToken cancellationToken);
+}
+```
+
+### DbQueryBase{TEntity, TCondition} Class
+
+* Base implementation of the IDataQuery&lt;TEntity, TCondition&gt; interface.
+* Inherit from the DbRepositoryBase&lt;TEntity&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbQueryBase<TEntity, TCondition>
+    : DbRepositoryBase<TEntity>, IDataQuery<TEntity, TCondition>
+{
+    public IEnumerable<TEntity> Query(TCondition condition, int skipCount = 0, int? maximumCount = null);
+    public IEnumerable<TEntity> Query(IDbConnection connection, TCondition condition, int skipCount = 0, int? maximumCount = null);
+    public IEnumerable<TEntity> Query(IDbTransaction transaction, TCondition condition, int skipCount = 0, int? maximumCount = null);
+    protected abstract IEnumerable<TEntity> Query(Func<IDbCommand> commandActivator, TCondition condition, int skipCount, int? maximumCount);
+
+    public int GetCount(TCondition condition);
+    public int GetCount(IDbConnection connection, TCondition condition);
+    public int GetCount(IDbTransaction transaction, TCondition condition);
+    protected abstract int GetCount(Func<IDbCommand> commandActivator, TCondition condition);
+}
+```
+
+### DbAsyncQueryBase{TEntity, TCondition} Class
+
+* Base implementation of the IAsyncDataQuery&lt;TEntity, TCondition&gt; interface.
+* Inherit from the DbQueryBase&lt;TEntity, TCondition&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbQueryBase<TEntity, TCondition>
+    : DbQueryBase<TEntity, TCondition>, IAsyncDataQuery<TEntity, TCondition>
+{
+    public IAsyncEnumerable<TEntity> QueryAsync(TCondition condition, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> QueryAsync(IDbConnection connection, TCondition condition, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> QueryAsync(IDbTransaction transaction, TCondition condition, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> QueryAsync(Func<IDbCommand> commandActivator, TCondition condition, int skipCount, int? maximumCount, CancellationToken cancellationToken);
+
+    public ValueTask<int> GetCountAsync(TCondition condition);
+    public ValueTask<int> GetCountAsync(IDbConnection connection, TCondition condition);
+    public ValueTask<int> GetCountAsync(IDbTransaction transaction, TCondition condition);
+    protected abstract ValueTask<int> GetCountAsync(Func<IDbCommand> commandActivator, TCondition condition);
+}
+```
+
 
 ## Repositories that use the context
 
@@ -1330,8 +1671,9 @@ Inherit the DbRepositoryWithContextBase&lt;TEntity, TContext&gt; class and imple
   * Abstract method that perform database operations
     * Override this method to build and execute a database command(s).
 
-```c#
-public abstract class DbReadRepositoryWithContextBase<TEntity, TKey, TContext> : DbRepositoryWithContextBase<TEntity, TContext>, IReadDataRepositoryWithContext<TEntity, TKey, TContext>
+```csharp
+public abstract class DbReadRepositoryWithContextBase<TEntity, TKey, TContext>
+    : DbRepositoryWithContextBase<TEntity, TContext>, IReadDataRepositoryWithContext<TEntity, TKey, TContext>
     where TContext : IDataRepositoryContext
 {
     public TEntity? Get(TKey key, TContext context);
@@ -1356,6 +1698,51 @@ public abstract class DbReadRepositoryWithContextBase<TEntity, TKey, TContext> :
 }
 ```
 
+### DbAsyncReadRepositoryWithContextBase{TEntity, TKey, TContext} Class
+
+* Base implementation of the IaSYNCReadDataRepositoryWithContext&lt;TEntity, TKey, TContext&gt; interface.
+* Inherit from the DbReadRepositoryWithContextBase&lt;TEntity, TContext&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbReadRepositoryWithContextBase<TEntity, TKey, TContext>
+    : DbReadRepositoryWithContextBase<TEntity, TKey, TContext>, IAsyncReadDataRepositoryWithContext<TEntity, TKey, TContext>
+    where TContext : IDataRepositoryContext
+{
+    public ValueTask<TEntity?> GetAsync(TKey key, TContext context);
+    public ValueTask<TEntity?> GetAsync(IDbConnection connection, TKey key, TContext context);
+    public ValueTask<TEntity?> GetAsync(IDbTransaction transaction, TKey key, TContext context);
+    protected abstract ValueTask<TEntity?> GetAsync(Func<IDbCommand> commandActivator, TKey key, TContext context);
+
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IEnumerable<TKey> keys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IAsyncEnumerable<TKey> keys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IDbConnection connection, IEnumerable<TKey> keys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IDbConnection connection, IAsyncEnumerable<TKey> keys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IDbTransaction transaction, IEnumerable<TKey> keys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TKey> keys, TContext context, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TKey> keys, TContext context, CancellationToken cancellationToken);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TKey> keys, TContext context, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TEntity> GetAllAsync(TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetAllAsync(IDbConnection connection, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetAllAsync(IDbTransaction transaction, TContext context, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetAllAsync(Func<IDbCommand> commandActivator, TContext context, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TKey> GetAllKeysAsync(TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TKey> GetAllKeysAsync(IDbConnection connection, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TKey> GetAllKeysAsync(IDbTransaction transaction, TContext context, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TKey> GetAllKeysAsync(Func<IDbCommand> commandActivator, TContext context, CancellationToken cancellationToken);
+}
+```
+
 ### DbReadRepositoryWithUniqueKeyWithContextBase{TEntity, TPrimaryKey, TUniqueKey, TContext} Class
 
 * Base implementation of the IReadDataRepositoryWithUniqueKeyWithContext&lt;TEntity, TPrimaryKey, TUniqueKey, TContext&gt; interface.
@@ -1370,8 +1757,9 @@ public abstract class DbReadRepositoryWithContextBase<TEntity, TKey, TContext> :
   * Abstract method that perform database operations
     * Override this method to build and execute a database command(s).
 
-```c#
-public abstract class DbReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext> : DbRepositoryWithContextBase<TEntity, TContext>, IReadDataRepositoryWithUniqueKeyWithContext<TEntity, TPrimaryKey, TUniqueKey, TContext>
+```csharp
+public abstract class DbReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext>
+    : DbRepositoryWithContextBase<TEntity, TContext>, IReadDataRepositoryWithUniqueKeyWithContext<TEntity, TPrimaryKey, TUniqueKey, TContext>
     where TContext : IDataRepositoryContext
 {
     public TEntity? GetByPrimaryKey(TPrimaryKey primaryKey, TContext context);
@@ -1411,6 +1799,70 @@ public abstract class DbReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPri
 }
 ```
 
+### DbAsyncReadRepositoryWithUniqueKeyWithContextBase{TEntity, TPrimaryKey, TUniqueKey, TContext} Class
+
+* Base implementation of the IAsyncReadDataRepositoryWithUniqueKeyWithContext&lt;TEntity, TPrimaryKey, TUniqueKey, TContext&gt; interface.
+* Inherit from the DbReadRepositoryWithUniqueKeyWithContextBase&lt;TEntity, TPrimaryKey, TUniqueKey, TContext%gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext>
+    : DbReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext>, IAsyncReadDataRepositoryWithUniqueKeyWithContext<TEntity, TPrimaryKey, TUniqueKey, TContext>
+    where TContext : IDataRepositoryContext
+{
+    public ValueTask<TEntity?> GetByPrimaryKeyAsync(TPrimaryKey primaryKey, TContext context);
+    public ValueTask<TEntity?> GetByPrimaryKeyAsync(IDbConnection connection, TPrimaryKey primaryKey, TContext context);
+    public ValueTask<TEntity?> GetByPrimaryKeyAsync(IDbTransaction transaction, TPrimaryKey primaryKey, TContext context);
+    protected abstract ValueTask<TEntity?> GetByPrimaryKeyAsync(Func<IDbCommand> commandActivator, TPrimaryKey primaryKey, TContext context);
+
+    public ValueTask<TEntity?> GetByUniqueKeyAsync(TUniqueKey uniqueKey, TContext context);
+    public ValueTask<TEntity?> GetByUniqueKeyAsync(IDbConnection connection, TUniqueKey uniqueKey, TContext context);
+    public ValueTask<TEntity?> GetByUniqueKeyAsync(IDbTransaction transaction, TUniqueKey uniqueKey, TContext context);
+    protected abstract ValueTask<TEntity?> GetByUniqueKeyAsync(Func<IDbCommand> commandActivator, TUniqueKey uniqueKey, TContext context);
+
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IEnumerable<TPrimaryKey> primaryKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IAsyncEnumerable<TPrimaryKey> primaryKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IDbConnection connection, IEnumerable<TPrimaryKey> primaryKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IDbConnection connection, IAsyncEnumerable<TPrimaryKey> primaryKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IDbTransaction transaction, IEnumerable<TPrimaryKey> primaryKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(IDbTransaction transaction, IAsyncEnumerable<TPrimaryKey> primaryKeys, TContext context, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(Func<IDbCommand> commandActivator, IEnumerable<TPrimaryKey> primaryKeys, TContext context, CancellationToken cancellationToken);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeByPrimaryKeyAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TPrimaryKey> primaryKeys, TContext context, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IEnumerable<TUniqueKey> uniqueKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IAsyncEnumerable<TUniqueKey> uniqueKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IDbConnection connection, IEnumerable<TUniqueKey> uniqueKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IDbConnection connection, IAsyncEnumerable<TUniqueKey> uniqueKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IDbTransaction transaction, IEnumerable<TUniqueKey> uniqueKeys, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(IDbTransaction transaction, IAsyncEnumerable<TUniqueKey> uniqueKeys, TContext context, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(Func<IDbCommand> commandActivator, IEnumerable<TUniqueKey> uniqueKeys, TContext context, CancellationToken cancellationToken);
+    protected abstract IAsyncEnumerable<TEntity> GetRangeByUniqueKeyAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TUniqueKey> uniqueKeys, TContext context, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TEntity> GetAllAsync(TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetAllAsync(IDbConnection connection, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> GetAllAsync(IDbTransaction transaction, TContext context, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> GetAllAsync(Func<IDbCommand> commandActivator, TContext context, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TPrimaryKey> GetAllPrimaryKeysAsync(TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TPrimaryKey> GetAllPrimaryKeysAsync(IDbConnection connection, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TPrimaryKey> GetAllPrimaryKeysAsync(IDbTransaction transaction, TContext context, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TPrimaryKey> GetAllPrimaryKeysAsync(Func<IDbCommand> commandActivator, TContext context, CancellationToken cancellationToken);
+
+    public IAsyncEnumerable<TUniqueKey> GetAllUniqueKeysAsync(TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TUniqueKey> GetAllUniqueKeysAsync(IDbConnection connection, TContext context, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TUniqueKey> GetAllUniqueKeysAsync(IDbTransaction transaction, TContext context, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TUniqueKey> GetAllUniqueKeysAsync(Func<IDbCommand> commandActivator, TContext context, CancellationToken cancellationToken);
+}
+```
+
 ### DbReadWriteRepositoryWithContextBase{TEntity, TKey, TContext} Class
 
 * Base implementation of the IWriteDataRepositoryWithContext&lt;TEntity, TContext&gt; interface.
@@ -1425,8 +1877,9 @@ public abstract class DbReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPri
   * Abstract method that perform database operations
     * Override this method to build and execute a database command(s).
 
-```c#
-public abstract class DbReadWriteRepositoryWithContextBase<TEntity, TKey, TContext> : DbReadRepositoryWithContextBase<TEntity, TKey, TContext>, IWriteDataRepositoryWithContext<TEntity, TContext>
+```csharp
+public abstract class DbReadWriteRepositoryWithContextBase<TEntity, TKey, TContext>
+    : DbReadRepositoryWithContextBase<TEntity, TKey, TContext>, IWriteDataRepositoryWithContext<TEntity, TContext>
     where TContext : IDataRepositoryContext
 {
     public int Insert(TEntity entity, TContext context);
@@ -1461,6 +1914,69 @@ public abstract class DbReadWriteRepositoryWithContextBase<TEntity, TKey, TConte
 }
 ```
 
+### DbAsyncReadWriteRepositoryWithContextBase{TEntity, TKey, TContext} Class
+
+* Base implementation of the IAsyncWriteDataRepositoryWithContext&lt;TEntity, TContext&gt; interface.
+* Inherit from the DbAsyncReadRepositoryWithContextBase&lt;TEntity, TKey, TContext&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbReadWriteRepositoryWithContextBase<TEntity, TKey, TContext>
+    : DbAsyncReadRepositoryWithContextBase<TEntity, TKey, TContext>, IAsyncWriteDataRepositoryWithContext<TEntity, TContext>
+    where TContext : IDataRepositoryContext
+{
+    public ValueTask<int> InsertAsync(TEntity entity, TContext context);
+    public ValueTask<int> InsertAsync(IDbConnection connection, TEntity entity, TContext context);
+    public ValueTask<int> InsertAsync(IDbTransaction transaction, TEntity entity, TContext context);
+    protected abstract ValueTask<int> InsertAsync(Func<IDbCommand> commandActivator, TEntity entity, TContext context);
+
+    public ValueTask<int> InsertRangeAsync(IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> InsertRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> InsertRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+
+    public ValueTask<int> UpdateAsync(TEntity entity, TContext context);
+    public ValueTask<int> UpdateAsync(IDbConnection connection, TEntity entity, TContext context);
+    public ValueTask<int> UpdateAsync(IDbTransaction transaction, TEntity entity, TContext context);
+    protected abstract ValueTask<int> UpdateAsync(Func<IDbCommand> commandActivator, TEntity entity, TContext context);
+
+    public ValueTask<int> UpdateRangeAsync(IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> UpdateRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> UpdateRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+
+    public ValueTask<int> DeleteAsync(TEntity entity, TContext context);
+    public ValueTask<int> DeleteAsync(IDbConnection connection, TEntity entity, TContext context);
+    public ValueTask<int> DeleteAsync(IDbTransaction transaction, TEntity entity, TContext context);
+    protected abstract ValueTask<int> DeleteAsync(Func<IDbCommand> commandActivator, TEntity entity, TContext context);
+
+    public ValueTask<int> DeleteRangeAsync(IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> DeleteRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> DeleteRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+}
+```
+
 ### DbReadWriteRepositoryWithUniqueKeyWithContextBase{TEntity, TPrimaryKey, TUniqueKey, TContext} Class
 
 * Base implementation of the IWriteDataRepositoryWithContext&lt;TEntity, TContext&gt; interface.
@@ -1475,8 +1991,9 @@ public abstract class DbReadWriteRepositoryWithContextBase<TEntity, TKey, TConte
   * Abstract method that perform database operations
     * Override this method to build and execute a database command(s).
 
-```c#
-public abstract class DbReadWriteRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext> : DbReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext>, IWriteDataRepositoryWithContext<TEntity, TContext>
+```csharp
+public abstract class DbReadWriteRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext>
+    : DbReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext>, IWriteDataRepositoryWithContext<TEntity, TContext>
     where TContext : IDataRepositoryContext
 {
     public int Insert(TEntity entity, TContext context);
@@ -1508,5 +2025,130 @@ public abstract class DbReadWriteRepositoryWithUniqueKeyWithContextBase<TEntity,
     public int DeleteRange(IDbConnection connection, IEnumerable<TEntity> entities, TContext context);
     public int DeleteRange(IDbTransaction transaction, IEnumerable<TEntity> entities, TContext context);
     protected abstract int DeleteRange(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, TContext context);
+}
+```
+
+### DbAsyncReadWriteRepositoryWithUniqueKeyWithContextBase{TEntity, TPrimaryKey, TUniqueKey, TContext} Class
+
+* Base implementation of the IAsyncWriteDataRepositoryWithContext&lt;TEntity, TContext&gt; interface.
+* Inherit from the DbAsyncReadRepositoryWithUniqueKeyWithContextBase&lt;TEntity, TPrimaryKey, TUniqueKey, TContext&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbAsyncReadWriteRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext>
+    : DbAsyncReadRepositoryWithUniqueKeyWithContextBase<TEntity, TPrimaryKey, TUniqueKey, TContext>, IAsyncWriteDataRepositoryWithContext<TEntity, TContext>
+    where TContext : IDataRepositoryContext
+{
+    public ValueTask<int> InsertAsync(TEntity entity, TContext context);
+    public ValueTask<int> InsertAsync(IDbConnection connection, TEntity entity, TContext context);
+    public ValueTask<int> InsertAsync(IDbTransaction transaction, TEntity entity, TContext context);
+    protected abstract ValueTask<int> InsertAsync(Func<IDbCommand> commandActivator, TEntity entity, TContext context);
+
+    public ValueTask<int> InsertRangeAsync(IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> InsertRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> InsertRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> InsertRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+
+    public ValueTask<int> UpdateAsync(TEntity entity, TContext context);
+    public ValueTask<int> UpdateAsync(IDbConnection connection, TEntity entity, TContext context);
+    public ValueTask<int> UpdateAsync(IDbTransaction transaction, TEntity entity, TContext context);
+    protected abstract ValueTask<int> UpdateAsync(Func<IDbCommand> commandActivator, TEntity entity, TContext context);
+
+    public ValueTask<int> UpdateRangeAsync(IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> UpdateRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> UpdateRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> UpdateRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+
+    public ValueTask<int> DeleteAsync(TEntity entity, TContext context);
+    public ValueTask<int> DeleteAsync(IDbConnection connection, TEntity entity, TContext context);
+    public ValueTask<int> DeleteAsync(IDbTransaction transaction, TEntity entity, TContext context);
+    protected abstract ValueTask<int> DeleteAsync(Func<IDbCommand> commandActivator, TEntity entity, TContext context);;
+
+    public ValueTask<int> DeleteRangeAsync(IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbConnection connection, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbConnection connection, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbTransaction transaction, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    public ValueTask<int> DeleteRangeAsync(IDbTransaction transaction, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken = default);
+    protected abstract ValueTask<int> DeleteRangeAsync(Func<IDbCommand> commandActivator, IEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+    protected abstract ValueTask<int> DeleteRangeAsync(Func<IDbCommand> commandActivator, IAsyncEnumerable<TEntity> entities, TContext context, CancellationToken cancellationToken);
+}
+```
+
+### DbQueryWithContextBase{TEntity, TCondition, TContext} Class
+
+* Base implementation of the IDataQueryWithContext&lt;TEntity, TCondition, TContext&gt; interface.
+* Inherit from the DbRepositoryWithContextBase&lt;TEntity, TContext&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbQueryWithContextBase<TEntity, TCondition, TContext>
+    : DbRepositoryWithContextBase<TEntity, TContext>, IDataQueryWithContext<TEntity, TCondition, TContext>
+    where TContext : IDataRepositoryContext
+{
+    public IEnumerable<TEntity> Query(TCondition condition, TContext context, int skipCount = 0, int? maximumCount = null);
+    public IEnumerable<TEntity> Query(IDbConnection connection, TCondition condition, TContext context, int skipCount = 0, int? maximumCount = null);
+    public IEnumerable<TEntity> Query(IDbTransaction transaction, TCondition condition, TContext context, int skipCount = 0, int? maximumCount = null);
+    protected abstract IEnumerable<TEntity> Query(Func<IDbCommand> commandActivator, TCondition condition, TContext context, int skipCount, int? maximumCount);
+
+    public int GetCount(TCondition condition, TContext context);
+    public int GetCount(IDbConnection connection, TCondition condition, TContext context);
+    public int GetCount(IDbTransaction transaction, TCondition condition, TContext context);
+    protected abstract int GetCount(Func<IDbCommand> commandActivator, TCondition condition, TContext context);
+}
+```
+
+### DbAsyncQueryWithContextBase{TEntity, TCondition, TContext} Class
+
+* Base implementation of the IAsyncDataQueryWithContext&lt;TEntity, TCondition, TContext&gt; interface.
+* Inherit from the DbQueryWithContextBase&lt;TEntity, TCondition, TContext&gt; class.
+* Implement each method defined in the repository interface and its corresponding overloaded methods.
+  * Method defined in the repository interface
+    * Creates a new connection and perform database operations. If there is no active TransactionScope, explicitly begin a transaction.
+  * Method that take a connection as an argument
+    * Performs a database operation using the specified connection. No transaction is begun.
+  * Method that take a transaction as an argument
+    * Performs a database operation using the specified transaction.
+  * Abstract method that perform database operations
+    * Override this method to build and execute a database command(s).
+
+```csharp
+public abstract class DbQueryWithContextBase<TEntity, TCondition, TContext>
+    : DbQueryWithContextBase<TEntity, TCondition, TContext>, IAsyncDataQueryWithContext<TEntity, TCondition, TContext>
+    where TContext : IDataRepositoryContext
+{
+    public IAsyncEnumerable<TEntity> QueryAsync(TCondition condition, TContext context, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> QueryAsync(IDbConnection connection, TCondition condition, TContext context, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default);
+    public IAsyncEnumerable<TEntity> QueryAsync(IDbTransaction transaction, TCondition condition, TContext context, int skipCount = 0, int? maximumCount = null, CancellationToken cancellationToken = default);
+    protected abstract IAsyncEnumerable<TEntity> QueryAsync(Func<IDbCommand> commandActivator, TCondition condition, TContext context, int skipCount, int? maximumCount, CancellationToken cancellationToken);
+
+    public ValueTask<int> GetCountAsync(TCondition condition, TContext context);
+    public ValueTask<int> GetCountAsync(IDbConnection connection, TCondition condition, TContext context);
+    public ValueTask<int> GetCountAsync(IDbTransaction transaction, TCondition condition, TContext context);
+    protected abstract ValueTask<int> GetCountAsync(Func<IDbCommand> commandActivator, TCondition condition, TContext context);
 }
 ```
